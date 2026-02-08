@@ -1,0 +1,112 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 176.000002347506
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 399.52901848757904,
+            "y": 752.90622079477
+          },
+          "nodeIndex": "Churn_Labelled_Customers",
+          "nodeLineageTag": "2a75ff44-df22-4c39-a1fa-4f59e1ff1ca5",
+          "size": {
+            "height": 179,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 401.989427893856,
+            "y": 303.51756180001877
+          },
+          "nodeIndex": "Customer_Demographics",
+          "nodeLineageTag": "d57e1007-5de0-4046-9ff3-6fb94cc31fd5",
+          "size": {
+            "height": 365.43589743589752,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 149.65525206732897
+          },
+          "nodeIndex": "Customer_Transactions",
+          "nodeLineageTag": "26504a0f-e91a-4407-b3d7-00adf4f858a9",
+          "size": {
+            "height": 416.20512820512829,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 768.64583333333326,
+            "y": 237.76033643759655
+          },
+          "nodeIndex": "Loyalty_Program",
+          "nodeLineageTag": "8bf0b88c-6ae8-4089-9b80-bcf5f1ad8b8f",
+          "size": {
+            "height": 207.07692307692309,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 78.125,
+            "y": 716.03123509988473
+          },
+          "nodeIndex": "Store_Locations",
+          "nodeLineageTag": "3e6806b4-7f21-44cd-b0b9-14fb6d0fcc25",
+          "size": {
+            "height": 206.29807692307691,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1052.6458333333333,
+            "y": 455.96921231104812
+          },
+          "nodeIndex": "Measures (2)",
+          "nodeLineageTag": "345c9b0c-057b-44e7-9b37-fce9cbd97a22",
+          "size": {
+            "height": 407.68131868131877,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1336.6458333333333,
+            "y": 341.01056838616353
+          },
+          "nodeIndex": "CLV Segment Table",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 65,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

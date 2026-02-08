@@ -1,0 +1,67 @@
+table Loyalty_Program
+	lineageTag: 8bf0b88c-6ae8-4089-9b80-bcf5f1ad8b8f
+
+	column Customer_ID
+		dataType: string
+		lineageTag: b74410d6-578a-42c0-a41c-d85c2937cc8e
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Loyalty_Tier
+		dataType: string
+		lineageTag: c959faca-75cc-4517-820c-27a403265167
+		summarizeBy: none
+		sourceColumn: Loyalty_Tier
+
+		annotation SummarizationSetBy = Automatic
+
+	column Points_Earned
+		dataType: int64
+		formatString: 0
+		lineageTag: bb5e4f27-5b64-4871-b847-fff917b0381e
+		summarizeBy: sum
+		sourceColumn: Points_Earned
+
+		annotation SummarizationSetBy = Automatic
+
+	column Points_Redeemed
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e7d3432-de1d-4ab1-a817-9436650300ad
+		summarizeBy: sum
+		sourceColumn: Points_Redeemed
+
+		annotation SummarizationSetBy = Automatic
+
+	column Last_Redemption_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c7bc4691-7599-4e92-ab4e-d9d07020c5ae
+		summarizeBy: none
+		sourceColumn: Last_Redemption_Date
+
+		variation Variation
+			isDefault
+			relationship: bb2cde3a-af13-48ac-b655-8ccb75f80ab0
+			defaultHierarchy: LocalDateTable_e2ff7588-5916-44f1-b03d-98cb90120af3.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Loyalty_Program = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\user\Downloads\Loyalty_Program.csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Customer_ID", type text}, {"Loyalty_Tier", type text}, {"Points_Earned", Int64.Type}, {"Points_Redeemed", Int64.Type}, {"Last_Redemption_Date", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

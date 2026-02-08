@@ -1,0 +1,58 @@
+table Churn_Labelled_Customers
+	lineageTag: 2a75ff44-df22-4c39-a1fa-4f59e1ff1ca5
+
+	column Customer_ID
+		dataType: string
+		lineageTag: 5a08cee0-e699-4ab1-ad20-d5d12f00fb12
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Last_Transaction_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1fd78396-148c-4998-86d9-e972bbaa2f29
+		summarizeBy: none
+		sourceColumn: Last_Transaction_Date
+
+		variation Variation
+			isDefault
+			relationship: ae711994-c2e5-4074-a5e4-f96895fa8a31
+			defaultHierarchy: LocalDateTable_b3aafce9-108a-4009-8d27-5b044abd0131.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Churned (Yes/No)'
+		dataType: string
+		lineageTag: ba68dd23-ba0a-4f11-aa65-54105665281e
+		summarizeBy: none
+		sourceColumn: Churned (Yes/No)
+
+		annotation SummarizationSetBy = Automatic
+
+	column Days_Since_Last_Purchase
+		dataType: int64
+		formatString: 0
+		lineageTag: 0c19dd96-5417-48c1-8ba4-414e4cd84a5e
+		summarizeBy: sum
+		sourceColumn: Days_Since_Last_Purchase
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Churn_Labelled_Customers = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\user\Downloads\Churn_Labelled_Customers.csv"),[Delimiter=",", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Customer_ID", type text}, {"Last_Transaction_Date", type date}, {"Churned (Yes/No)", type text}, {"Days_Since_Last_Purchase", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

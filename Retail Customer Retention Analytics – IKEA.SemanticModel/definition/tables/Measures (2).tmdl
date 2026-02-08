@@ -1,0 +1,71 @@
+table 'Measures (2)'
+	lineageTag: 345c9b0c-057b-44e7-9b37-fce9cbd97a22
+
+	measure 'Churn Rate' = DIVIDE([Churned Customers],[Total Customers])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: d570976a-889c-4423-bf02-b4d5c28f4309
+
+	measure 'Churned Customers' = CALCULATE(DISTINCTCOUNT(Churn_Labelled_Customers[Customer_ID]),Churn_Labelled_Customers[Churned (Yes/No)] = "Yes")
+		formatString: 0
+		lineageTag: b5abaa73-dfb4-4ee0-9776-24b9ab00e1c4
+
+	measure 'Repeat Customers' = COUNTROWS(FILTER(VALUES(Customer_Transactions[Customer_ID]), COUNTROWS(Customer_Transactions) > 1))
+		formatString: 0
+		lineageTag: dd2ce77f-427c-4643-9833-b1d30bae3fda
+
+	measure 'Total Customers' = DISTINCTCOUNT(Customer_Demographics[Customer_ID])
+		formatString: 0
+		lineageTag: 4d577256-d0c3-4163-8e67-eff160238451
+
+	measure 'Low-Tier Customers' = CALCULATE(DISTINCTCOUNT(Customer_Transactions[Customer_ID]),FILTER(VALUES(Customer_Transactions[Customer_ID]),[Total Customers] >= 2 && [Total Customers] <= 4))
+		formatString: 0
+		lineageTag: 38f4699d-da4a-411f-94c0-6e6bd8b859ce
+
+	measure 'Mid-Tier Customers' = CALCULATE(DISTINCTCOUNT(Customer_Transactions[Customer_ID]),FILTER(VALUES(Customer_Transactions[Customer_ID]),[Total Customers] >= 5 && [Total Customers] <= 10))
+		formatString: 0
+		lineageTag: 67ca08cf-0bc5-4d1c-90ff-be1174220e0d
+
+	measure 'High-Tier Customers' = CALCULATE(DISTINCTCOUNT(Customer_Transactions[Customer_ID]),FILTER(VALUES(Customer_Transactions[Customer_ID]),[Total Customers] >= 11))
+		formatString: 0
+		lineageTag: 49a86175-b858-439e-8d86-47d59a7cdaba
+
+	measure 'Avg Purchase Frequency' = DIVIDE(COUNT(Customer_Transactions[Customer_ID]),[Total Customers])
+		formatString: 0.0
+		lineageTag: a8f92238-8b9d-4ea2-b8c9-4eef7d86a343
+
+	measure '% Transactions with Promotion' = DIVIDE(CALCULATE(COUNT(Customer_Transactions[Transaction_ID]),Customer_Transactions[Promotion_Applied] = "Yes"),COUNT(Customer_Transactions[Transaction_ID]),0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: abfcd795-fabb-4e0e-ac52-fde0fc87bffa
+
+	measure 'Avg Purchase Amount With Promotion' = CALCULATE(AVERAGE(Customer_Transactions[Amount]),Customer_Transactions[Promotion_Applied] = "Yes")
+		lineageTag: a3745082-625f-4483-bb98-ba11dd817ac0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Purchase Amount Without Promotion' = CALCULATE(AVERAGE(Customer_Transactions[Amount]),Customer_Transactions[Promotion_Applied] = "No")
+		lineageTag: 15d9910e-dded-4db1-b995-cb6ba5513d95
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Retention Rate' = 1 - DIVIDE([Repeat Customers], [Total Customers])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b0dedee8-1dd7-4056-bd33-b6c292d6080b
+
+	measure CLV = DIVIDE(SUM(Customer_Transactions[Amount]),SUM('Customer_Demographics'[Membership_Duration]))
+		formatString: 0
+		lineageTag: f2a83169-b4c7-4393-b7b6-8f1def7a882f
+
+	partition 'Measures (2)' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WSlSKjQUA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

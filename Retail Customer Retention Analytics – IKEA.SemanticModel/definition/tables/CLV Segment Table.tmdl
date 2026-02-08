@@ -1,0 +1,65 @@
+table 'CLV Segment Table'
+	lineageTag: e62dc400-8d3e-41ac-b562-179f6b527a64
+
+	measure 'CLV Segment Logic' =
+			
+			VAR CustomerCLV = [CLV]
+			
+			VAR P25 =
+			    PERCENTILEX.INC (
+			        ALL ( Customer_Demographics[Customer_ID] ),
+			        [CLV],
+			        0.25
+			    )
+			
+			VAR P75 =
+			    PERCENTILEX.INC (
+			        ALL ( Customer_Demographics[Customer_ID] ),
+			        [CLV],
+			        0.75
+			    )
+			
+			VAR CustomerSegment =
+			    SWITCH (
+			        TRUE (),
+			        CustomerCLV <= P25, "Low (Bottom 25%)",
+			        CustomerCLV <= P75, "Medium (Middle 50%)",
+			        "High (Top 25%)"
+			    )
+			
+			VAR SelectedSegment =
+			    SELECTEDVALUE ( 'CLV Segment Table'[Segment] )
+			
+			RETURN
+			IF (
+			    ISBLANK ( SelectedSegment )
+			        || SelectedSegment = CustomerSegment,
+			    1,
+			    0
+			)
+		formatString: 0
+		lineageTag: abaa2e06-328e-4240-b613-842dc7b27354
+
+	column Segment
+		lineageTag: 5cdc27ec-a040-4d0d-9116-369b8c40196e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Segment]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'CLV Segment Table' = calculated
+		mode: import
+		source =
+				
+				DATATABLE (
+				    "Segment", STRING,
+				    {
+				        {"Low (Bottom 25%)"},
+				        {"Medium (Middle 50%)"},
+				        {"High (Top 25%)"}
+				    }
+				)
+
+	annotation PBI_Id = 3d6058bc553744689ac3cc1995ea6fee
+

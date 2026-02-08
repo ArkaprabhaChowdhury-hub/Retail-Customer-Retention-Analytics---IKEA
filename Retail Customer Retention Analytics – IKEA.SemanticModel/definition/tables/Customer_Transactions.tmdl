@@ -1,0 +1,135 @@
+table Customer_Transactions
+	lineageTag: 26504a0f-e91a-4407-b3d7-00adf4f858a9
+
+	column Transaction_ID
+		dataType: string
+		lineageTag: 2285ad18-de44-4229-9c86-988ae2c572f0
+		summarizeBy: none
+		sourceColumn: Transaction_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer_ID
+		dataType: string
+		lineageTag: 71748ccc-0fbb-4e10-a19f-40ca91a15e35
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Transaction_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c790dd84-5b7f-446d-a3a4-dd413d96ff4c
+		summarizeBy: none
+		sourceColumn: Transaction_Date
+
+		variation Variation
+			isDefault
+			relationship: 94f6a6aa-8254-4ed5-b1e3-9fd5ef98bde7
+			defaultHierarchy: LocalDateTable_eb449de6-89e1-454f-a1f5-6ee6ee8046d3.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Store_ID
+		dataType: string
+		lineageTag: 7e31178f-702f-450b-b8b8-66ee4888d66f
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product_Category
+		dataType: string
+		lineageTag: 6712177e-f457-48b7-9b6e-a7b81b60f5fe
+		summarizeBy: none
+		sourceColumn: Product_Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amount
+		dataType: double
+		lineageTag: 0a6df792-7fe7-4c2b-abe4-98666ad9e75c
+		summarizeBy: sum
+		sourceColumn: Amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: ba2d7712-54f3-4434-b66d-75fbdae3ad7f
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column Promotion_Applied
+		dataType: string
+		lineageTag: b5c842b1-f436-43ff-a2a8-b8194f9598f2
+		summarizeBy: none
+		sourceColumn: Promotion_Applied
+
+		annotation SummarizationSetBy = Automatic
+
+	column Transaction_Month = Customer_Transactions[Transaction_Date].[Month]
+		dataType: string
+		lineageTag: 5ef35af8-5d15-4314-bbf3-8f23faaab87b
+		summarizeBy: none
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Transaction_Year = Customer_Transactions[Transaction_Date].[Year]
+		formatString: 0
+		lineageTag: 5121b31b-d1fb-46dd-b3d8-9d47c5f11bf2
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 6bdb07c1-47ab-431e-84b1-de6bf65142e7
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: d4dcd428-2bc3-4632-ac8f-5d4b0975e954
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store_Type
+		dataType: string
+		lineageTag: 259976fd-256c-493a-bba7-062276d26736
+		summarizeBy: none
+		sourceColumn: Store_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customer_Transactions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\user\Downloads\Customer_Transactions.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Transaction_ID", type text}, {"Customer_ID", type text}, {"Transaction_Date", type date}, {"Store_ID", type text}, {"Product_Category", type text}, {"Amount", type number}, {"Quantity", Int64.Type}, {"Promotion_Applied", type text}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Changed Type", {"Store_ID"}, Store_Locations, {"Store_ID"}, "Store_Locations", JoinKind.LeftOuter),
+				    #"Expanded Store_Locations" = Table.ExpandTableColumn(#"Merged Queries", "Store_Locations", {"City", "Region", "Store_Type", "Opening_Year"}, {"City", "Region", "Store_Type", "Opening_Year"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded Store_Locations",{"Opening_Year"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

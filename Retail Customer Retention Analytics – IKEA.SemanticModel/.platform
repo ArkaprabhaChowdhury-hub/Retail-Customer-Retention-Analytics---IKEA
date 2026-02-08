@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Retail Customer Retention Analytics – IKEA"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e19ff4c1-4b97-4351-811f-922c0312d2fd"
+  }
+}

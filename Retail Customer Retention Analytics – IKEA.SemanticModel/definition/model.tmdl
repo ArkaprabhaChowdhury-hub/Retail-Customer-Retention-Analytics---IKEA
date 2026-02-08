@@ -1,0 +1,29 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Churn_Labelled_Customers","Customer_Demographics","Customer_Transactions","Loyalty_Program","Store_Locations","Measures (2)"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Churn_Labelled_Customers
+ref table DateTableTemplate_f6507063-ea9c-4155-8150-00e3799a5f5d
+ref table LocalDateTable_b3aafce9-108a-4009-8d27-5b044abd0131
+ref table Customer_Demographics
+ref table LocalDateTable_0b90e8f5-001d-4f33-b59d-61e13248ddeb
+ref table Customer_Transactions
+ref table LocalDateTable_eb449de6-89e1-454f-a1f5-6ee6ee8046d3
+ref table Loyalty_Program
+ref table LocalDateTable_e2ff7588-5916-44f1-b03d-98cb90120af3
+ref table Store_Locations
+ref table 'Measures (2)'
+ref table 'CLV Segment Table'
+
+ref cultureInfo en-US
+

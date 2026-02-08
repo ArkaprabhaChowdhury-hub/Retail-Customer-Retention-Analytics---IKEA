@@ -1,0 +1,58 @@
+table Store_Locations
+	lineageTag: 3e6806b4-7f21-44cd-b0b9-14fb6d0fcc25
+
+	column Store_ID
+		dataType: string
+		lineageTag: fb8ddb78-3aca-4606-82e6-31a696812153
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: e1b652e1-9c40-4306-851c-35a20cd8f883
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 75e80bf7-a711-46ee-972b-b4cc40e9c37a
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Store_Type
+		dataType: string
+		lineageTag: c4787fb0-e011-4be6-b6f2-8dd2e5027a36
+		summarizeBy: none
+		sourceColumn: Store_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Opening_Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 7c0daa2d-2cac-4bfd-bca5-f674b37d27d5
+		summarizeBy: none
+		sourceColumn: Opening_Year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Store_Locations = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\user\Downloads\Store_Locations.csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Opening_Year", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
